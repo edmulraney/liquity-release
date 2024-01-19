@@ -69,5 +69,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ github.event_name == 'push' }}
         with:
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ fromJSON('{ "refs/heads/master":"latest", "refs/heads/main":"next" }')[github.ref] }}
           files: dapp.zip
