@@ -58,12 +58,15 @@ jobs:
         env:
           TAG: ${{ fromJSON('{ "refs/heads/master":"latest", "refs/heads/main":"next" }')[github.ref] }}
 
-      - name: Release Github build artifact
-        uses: softprops/action-gh-release@v1
+      - name: Prepare Github build artifact
         if: ${{ github.event_name == 'push' }}
         run: |
           ln -s packages/dev-frontend/dist dapp
           zip -r dapp.zip dapp/*
           rm dapp
+
+      - name: Release Github build artifact
+        uses: softprops/action-gh-release@v1
+        if: ${{ github.event_name == 'push' }}
         with:
           files: dapp.zip
