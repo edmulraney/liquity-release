@@ -67,6 +67,7 @@
     "rebuild": "run-s prepare build",
     "release": "run-s 'release:*'",
     "release:delete-dev-deployments": "yarn workspace @liquity/lib-ethers delete-dev-deployments",
+    "release:dev-frontend": "yarn workspace @liquity/dev-frontend semantic-release",
     "release:lib-base": "yarn workspace @liquity/lib-base semantic-release",
     "release:lib-ethers": "yarn workspace @liquity/lib-ethers semantic-release",
     "release:lib-react": "yarn workspace @liquity/lib-react semantic-release",

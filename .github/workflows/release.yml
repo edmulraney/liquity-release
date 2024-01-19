@@ -28,6 +28,13 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build
 
+      # This step must run after `build` and before `release`
+      - name: Prepare Github build artifact
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          ln -s packages/dev-frontend/dist dapp
+          zip -r dapp.zip dapp/*
+
       # - name: Test SDK & UI
       #   run: yarn test
 
@@ -35,12 +42,12 @@ jobs:
       #   if: ${{ github.ref == 'refs/heads/master' }}
       #   run: yarn test-live
 
-      # - name: Release SDK on NPM
-      #   if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   run: yarn release
+      - name: Release SDK on NPM
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn release
 
       # - name: Login to Docker Hub
       #   uses: azure/docker-login@v1
@@ -57,17 +64,3 @@ jobs:
       #   working-directory: ./packages/dev-frontend
       #   env:
       #     TAG: ${{ fromJSON('{ "refs/heads/master":"latest", "refs/heads/main":"next" }')[github.ref] }}
-
-      - name: Prepare Github build artifact
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          ln -s packages/dev-frontend/dist dapp
-          zip -r dapp.zip dapp/*
-          rm dapp
-
-      - name: Release Github build artifact
-        uses: softprops/action-gh-release@v1
-        if: ${{ github.event_name == 'push' }}
-        with:
-          tag_name: ${{ fromJSON('{ "refs/heads/master":"latest", "refs/heads/main":"next" }')[github.ref] }}
-          files: dapp.zip
