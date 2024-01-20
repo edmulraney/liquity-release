@@ -6,9 +6,9 @@ env:
 
 on:
   push:
-    branches: [master, main]
+    branches: [main]
   pull_request:
-    branches: [master, main]
+    branches: [main]
 
 jobs:
   release:
@@ -39,7 +39,7 @@ jobs:
       #   run: yarn test
 
       # - name: Test SDK integration against live contracts
-      #   if: ${{ github.ref == 'refs/heads/master' }}
+      #   if: ${{ github.ref == 'refs/heads/main' }}
       #   run: yarn test-live
 
       - name: Release SDK on NPM
@@ -63,4 +63,4 @@ jobs:
       #     docker-compose push
       #   working-directory: ./packages/dev-frontend
       #   env:
-      #     TAG: ${{ fromJSON('{ "refs/heads/master":"latest", "refs/heads/main":"next" }')[github.ref] }}
+      #     TAG: ${{ fromJSON('{ "refs/heads/main":"latest", "refs/heads/main":"next" }')[github.ref] }}
